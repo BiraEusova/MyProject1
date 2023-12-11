@@ -1,9 +1,10 @@
 <?php
 $localhost = "localhost";
 $db = "TSUdb";
-$user = "admin";
-$password = "admin";
-$link = mysqli_connect ($localhost, $user, $password, $db);
+//$user = "admin";
+//$password = "admin";
+//$link = mysqli_connect ($localhost, $user, $password, $db);
+$link = mysqli_connect ($localhost, 'root', '');
 if ($link) {
     //echo "Соединение с сервером установлено", "<br>";
 } else {

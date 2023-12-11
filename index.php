@@ -1,3 +1,4 @@
+<?php require_once('create_db_request.php'); ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -12,7 +13,7 @@
     <?php include "menu.html"; ?>
 
     <?php
-        $query = "SELECT * FROM notes";
+        $query = "SELECT * FROM notes ORDER BY created DESC";
         $localhost = "localhost";
         $db = "TSUdb";
         $user = "admin";
@@ -30,6 +31,18 @@
         }
     ?>
 
+    <form action="" method="get">
+
+        <label for="search">Поиск</label>
+        <input type="text" name = "search" id = "search"/>
+
+        <input type="hidden" name="actionFunc" value="func" />
+
+        <div style="width: 300px">
+            <input type="submit" name="submit" id="submit" value="Поиск"/>
+        </div>
+    </form>
+
 </body>
 </html>
 
@@ -40,3 +53,50 @@
         left: 0px;
         right: 0px;
 </style>
+
+<?php
+if(isset($_GET['actionFunc'])){
+    $action_func = $_GET['actionFunc'];
+    if (function_exists($action_func)){
+        $action_func();
+    }
+    else{
+        echo 'rrr';
+    }
+}
+    function func()
+    {
+        $user_search = $_GET['search'];
+        $where_list = array();
+        $query_usersearch = "SELECT * FROM notes";
+        $clean_search = str_replace(',', ' ', $user_search);
+        $search_words = explode(' ', $clean_search);
+
+        $final_search_words = array();
+
+        if (count($search_words) > 0) {
+            foreach ($search_words as $word) {
+                if (!empty($word)) {
+                    $final_search_words[] = $word;
+                }
+            }
+        }
+
+        foreach ($final_search_words as $word) {
+            $where_list[] = " article LIKE '%$word%'";
+        }
+
+        $where_clause = implode(' OR ', $where_list);
+        if (!empty($where_clause)) {
+            $query_usersearch .= " WHERE $where_clause";
+        }
+
+        $res_query = doRequest($query_usersearch);
+
+        while ($res_array = mysqli_fetch_array($res_query)) {
+            echo $res_array['id'], "<br>";
+            echo $res_array['article'], "<br>", "<hr>", "<br>";
+        }
+    }
+?>
+

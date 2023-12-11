@@ -1,6 +1,6 @@
 <?php
 $localhost = "localhost";
-$db = " TSUdb ";
+$db = "TSUdb";
 $user = "admin";
 $password = "admin";
 $link = mysqli_connect($localhost, $user, $password, $db);
